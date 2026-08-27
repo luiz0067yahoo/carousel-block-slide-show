@@ -24,10 +24,10 @@ Clone the repository into your WordPress plugins directory:
 
 ```bash
 cd wp-content/plugins
-git clone https://github.com/SEU-USUARIO/wordpress-plugin-gutenberg-block-bootstrap-carousel.git
+git clone https://github.com/your-user/wordpress-plugin-gutenberg-block-bootstrap-carousel.git
 ```
 
-Replace `SEU-USUARIO` with your GitHub username.
+Replace `your-user` with your GitHub username.
 
 Then:
 
