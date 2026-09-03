@@ -13,90 +13,40 @@
  * Domain Path:       /languages
  *
  * @package           WP_Bootstrap_Carousel
- */
+*/
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
-
-// Plugin constants
-define( 'WP_BOOTSTRAP_CAROUSEL_VERSION', '1.0.0' );
-define( 'WP_BOOTSTRAP_CAROUSEL_PATH', plugin_dir_path( __FILE__ ) );
-define( 'WP_BOOTSTRAP_CAROUSEL_URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Registers the Gutenberg block using the metadata loaded from `block.json`.
- * Behind the scenes, it also registers all assets so they can be enqueued
- * through the block editor in the corresponding context.
- *
- * @see https://developer.wordpress.org/reference/functions/register_block_type/
+ * Enqueue styles and scripts for frontend and admin
  */
-function wp_bootstrap_carousel_block_init() {
-	// Register from build directory if it exists, otherwise fallback to src
-	if ( file_exists( WP_BOOTSTRAP_CAROUSEL_PATH . 'build/block.json' ) ) {
-		register_block_type( WP_BOOTSTRAP_CAROUSEL_PATH . 'build' );
-	} elseif ( file_exists( WP_BOOTSTRAP_CAROUSEL_PATH . 'src/block.json' ) ) {
-		register_block_type( WP_BOOTSTRAP_CAROUSEL_PATH . 'src' );
-	}
+function wp_bootstrap_carousel_enqueue_assets() { 
+	// Bootstrap 5 CSS via CDN
+	wp_enqueue_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css', array(), '5.3.3' );
+	
+	// Font Awesome via CDN
+	wp_enqueue_style( 'bootstrapAll', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css', array(), '6.5.2' );
+	
+	// Custom Plugin Styles
+	wp_enqueue_style( 'style', plugin_dir_url( __FILE__ ) . 'style.css.php', array(), '1.0.0' );
+
+	// Bootstrap 5 JS Bundle (includes Popper) via CDN
+	wp_enqueue_script( 'bootstrap-bundle', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js', array( 'jquery' ), '5.3.3', true );
 }
-add_action( 'init', 'wp_bootstrap_carousel_block_init' );
 
-/**
- * Enqueue Bootstrap 5 CSS & JS assets on the frontend if the block is rendered.
- * Themes that already bundle Bootstrap 5 can disable this via filter:
- * add_filter( 'wp_bootstrap_carousel_enqueue_bootstrap', '__return_false' );
- */
-function wp_bootstrap_carousel_enqueue_bootstrap_assets() {
-	$enqueue_bootstrap = apply_filters( 'wp_bootstrap_carousel_enqueue_bootstrap', true );
+// Hook for frontend (header / footer)
+add_action( 'wp_enqueue_scripts', 'wp_bootstrap_carousel_enqueue_assets' );
 
-	if ( ! $enqueue_bootstrap ) {
-		return;
-	}
+// Hook for admin, login, and block editor styles
+add_action( 'admin_enqueue_scripts', 'wp_bootstrap_carousel_enqueue_assets' );
+add_action( 'login_enqueue_scripts', 'wp_bootstrap_carousel_enqueue_assets', 10 );
+add_action( 'enqueue_block_editor_assets', 'wp_bootstrap_carousel_enqueue_assets' );
+add_action( 'wp_before_admin_bar_render', 'wp_bootstrap_carousel_enqueue_assets' );
 
-	// Bootstrap 5 CSS
-	if ( ! wp_style_is( 'bootstrap', 'enqueued' ) && ! wp_style_is( 'bootstrap-5', 'enqueued' ) ) {
-		wp_enqueue_style(
-			'bootstrap-5',
-			'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
-			array(),
-			'5.3.3'
-		);
-	}
+require_once plugin_dir_path( __FILE__ ) . 'plugin/blocks.php';
 
-	// Bootstrap 5 JS Bundle (includes Popper)
-	if ( ! wp_script_is( 'bootstrap', 'enqueued' ) && ! wp_script_is( 'bootstrap-5', 'enqueued' ) ) {
-		wp_enqueue_script(
-			'bootstrap-5',
-			'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',
-			array(),
-			'5.3.3',
-			true
-		);
-	}
-}
-add_action( 'wp_enqueue_scripts', 'wp_bootstrap_carousel_enqueue_bootstrap_assets' );
 
-/**
- * Enqueue Bootstrap CSS in the Gutenberg editor screen for realistic preview.
- */
-function wp_bootstrap_carousel_editor_assets() {
-	wp_enqueue_style(
-		'bootstrap-5-editor',
-		'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
-		array(),
-		'5.3.3'
-	);
-}
-add_action( 'enqueue_block_editor_assets', 'wp_bootstrap_carousel_editor_assets' );
-
-/**
- * Load plugin textdomain for internationalization.
- */
-function wp_bootstrap_carousel_load_textdomain() {
-	load_plugin_textdomain(
-		'wordpress-plugin-gutenberg-block-bootstrap-carousel',
-		false,
-		dirname( plugin_basename( __FILE__ ) ) . '/languages'
-	);
-}
-add_action( 'plugins_loaded', 'wp_bootstrap_carousel_load_textdomain' );
+?>
