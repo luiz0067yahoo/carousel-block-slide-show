@@ -1,4 +1,4 @@
-# WordPress Gutenberg Block Bootstrap Carousel 🎠
+# Bootstrap Carousel Block 🎠
 
 [![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg?logo=wordpress)](https://wordpress.org)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.3-7952b3.svg?logo=bootstrap)](https://getbootstrap.com)
@@ -61,7 +61,7 @@ wordpress-plugin-gutenberg-block-bootstrap-carousel/
    git clone https://github.com/luiz0067yahoo/wordpress-plugin-gutenberg-block-bootstrap-carousel-.git wordpress-plugin-gutenberg-block-bootstrap-carousel
    ```
 2. No painel de administração do WordPress, vá em **Plugins > Plugins Instalados**.
-3. Localize **WordPress Gutenberg Block Bootstrap Carousel** e clique em **Ativar**.
+3. Localize **Bootstrap Carousel Block** e clique em **Ativar**.
 
 ---
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       WordPress Gutenberg Block Bootstrap Carousel
+ * Plugin Name:       Bootstrap Carousel Block
  * Plugin URI:        https://github.com/luiz0067yahoo/wordpress-plugin-gutenberg-block-bootstrap-carousel-
  * Description:       WordPress Gutenberg Block for responsive Bootstrap 5 Carousels, compatible with any theme.
  * Version:           1.0.0
