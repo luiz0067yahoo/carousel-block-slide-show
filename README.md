@@ -1,4 +1,4 @@
-# Carousel Block for Bootstrap 🎠
+#Carousel Block 🎠
 
 [![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg?logo=wordpress)](https://wordpress.org)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.3-7952b3.svg?logo=bootstrap)](https://getbootstrap.com)
