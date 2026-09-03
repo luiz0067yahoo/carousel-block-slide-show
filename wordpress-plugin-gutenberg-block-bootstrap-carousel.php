@@ -37,16 +37,28 @@ function wp_bootstrap_carousel_enqueue_assets() {
 	wp_enqueue_script( 'bootstrap-bundle', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js', array( 'jquery' ), '5.3.3', true );
 }
 
+// Hook for both frontend and Gutenberg block editor canvas iframe
+add_action( 'enqueue_block_assets', 'wp_bootstrap_carousel_enqueue_assets' );
+
 // Hook for frontend (header / footer)
 add_action( 'wp_enqueue_scripts', 'wp_bootstrap_carousel_enqueue_assets' );
 
-// Hook for admin, login, and block editor styles
+// Hook for admin, login, and block editor UI
 add_action( 'admin_enqueue_scripts', 'wp_bootstrap_carousel_enqueue_assets' );
 add_action( 'login_enqueue_scripts', 'wp_bootstrap_carousel_enqueue_assets', 10 );
 add_action( 'enqueue_block_editor_assets', 'wp_bootstrap_carousel_enqueue_assets' );
 add_action( 'wp_before_admin_bar_render', 'wp_bootstrap_carousel_enqueue_assets' );
 
+/**
+ * Register editor styles support for block themes / iframed Gutenberg canvas
+ */
+function wp_bootstrap_carousel_add_editor_styles() {
+	add_theme_support( 'editor-styles' );
+	add_editor_style( 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css' );
+	add_editor_style( 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css' );
+}
+add_action( 'after_setup_theme', 'wp_bootstrap_carousel_add_editor_styles' );
+add_action( 'admin_init', 'wp_bootstrap_carousel_add_editor_styles' );
+
 require_once plugin_dir_path( __FILE__ ) . 'plugin/blocks.php';
-
-
 ?>
