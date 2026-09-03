@@ -15,8 +15,8 @@ Plugin WordPress moderno e intuitivo que adiciona um bloco nativo do **Gutenberg
 - **Barra de Ações Rápida sobre o Slide**:
   - ➕ **Adicionar**: Insere novos slides diretamente da Biblioteca de Mídia.
   - ✏️ **Editar**: Troca a imagem do slide ativo com um clique.
-  - ▾ **Ajuste de Imagem (`object-fit`)**: Escolha entre `cover`, `contain`, `fill`, `scale-down` e `none`.
-  - ▾ **Posição da Imagem (`object-position`)**: Controle 9 pontos focais (`top left`, `center center`, `bottom right`, etc.).
+  - ▾ **Ajuste de Imagem individual (`object-fit`)**: Escolha entre `cover`, `contain`, `fill`, `scale-down` e `none` para cada slide.
+  - ▾ **Posição da Imagem individual (`object-position`)**: Controle 9 pontos focais (`top left`, `center center`, `bottom right`, etc.) para cada slide.
   - ❌ **Excluir**: Remove o slide ativo com segurança.
 - **Legenda Elegante Sobreposta no Rodapé**:
   - Título e descrição centralizados sobre a imagem.

@@ -32,6 +32,14 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 			description: [
 				'<p>Descrição do Slide 1</p>',
 				'<p>Descrição do Slide 2</p>'
+			],
+			objectFit: [
+				'cover',
+				'cover'
+			],
+			objectPosition: [
+				'center center',
+				'center center'
 			]
 		}
 	},
@@ -53,12 +61,12 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 			default: []
 		},
 		objectFit: {
-			type: 'string',
-			default: 'cover'
+			type: 'array',
+			default: []
 		},
 		objectPosition: {
-			type: 'string',
-			default: 'center center'
+			type: 'array',
+			default: []
 		}
 	},
 	edit: function(props) {
@@ -69,12 +77,12 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 
 		var acc_url = props.attributes.url || [];
 		var acc_title = props.attributes.title || [];
-		var acc_description = props.attributes.description || [];
-
-		if (!props.attributes.id || acc_url.length === 0 || acc_title.length === 0) {	
+		var acc_description = props.attributes.description || [		if (!props.attributes.id || acc_url.length === 0 || acc_title.length === 0) {	
 			var initial_title = [];
 			var initial_url = [];
 			var initial_description = [];
+			var initial_object_fit = [];
+			var initial_object_position = [];
 
 			if (!props.attributes.id) {
 				props.setAttributes({ id: getNewIdCarousel() });
@@ -100,12 +108,16 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 					initial_title.push(attachment.attributes.title || '');
 					initial_url.push(attachment.attributes.url || '');
 					initial_description.push(attachment.attributes.caption || '');
+					initial_object_fit.push('cover');
+					initial_object_position.push('center center');
 				});
 				if (selection.length > 0) {
 					props.setAttributes({
 						title: initial_title,
 						url: initial_url,
-						description: initial_description
+						description: initial_description,
+						objectFit: initial_object_fit,
+						objectPosition: initial_object_position
 					});
 				}
 			});
@@ -166,6 +178,26 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 				props.setAttributes({ description: new_description });
 			}
 		}
+
+		function updateObjectFit(position, value) {
+			var new_object_fit = Array.isArray(props.attributes.objectFit) ? [...props.attributes.objectFit] : [];
+			var currentTotal = (props.attributes.url || []).length;
+			while (new_object_fit.length < currentTotal) {
+				new_object_fit.push('cover');
+			}
+			new_object_fit[position] = value;
+			props.setAttributes({ objectFit: new_object_fit });
+		}
+
+		function updateObjectPosition(position, value) {
+			var new_object_position = Array.isArray(props.attributes.objectPosition) ? [...props.attributes.objectPosition] : [];
+			var currentTotal = (props.attributes.url || []).length;
+			while (new_object_position.length < currentTotal) {
+				new_object_position.push('center center');
+			}
+			new_object_position[position] = value;
+			props.setAttributes({ objectPosition: new_object_position });
+		}
 		
 		function addlinkdata(position) {
 			var frame = wp.media({
@@ -188,12 +220,23 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 					var new_title = [...(props.attributes.title || [])];
 					var new_url = [...(props.attributes.url || [])];
 					var new_description = [...(props.attributes.description || [])];
+					var new_object_fit = Array.isArray(props.attributes.objectFit) ? [...props.attributes.objectFit] : [];
+					var new_object_position = Array.isArray(props.attributes.objectPosition) ? [...props.attributes.objectPosition] : [];
 					var insertIndex = position + 1;
+
+					while (new_object_fit.length < new_url.length) {
+						new_object_fit.push('cover');
+					}
+					while (new_object_position.length < new_url.length) {
+						new_object_position.push('center center');
+					}
 
 					selection.each(function(attachment) {
 						new_title.splice(insertIndex, 0, attachment.attributes.title || '');
 						new_url.splice(insertIndex, 0, attachment.attributes.url || '');
 						new_description.splice(insertIndex, 0, attachment.attributes.caption || '');
+						new_object_fit.splice(insertIndex, 0, 'cover');
+						new_object_position.splice(insertIndex, 0, 'center center');
 						insertIndex++;
 					});
 
@@ -204,7 +247,9 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 					props.setAttributes({
 						title: new_title,
 						url: new_url,
-						description: new_description
+						description: new_description,
+						objectFit: new_object_fit,
+						objectPosition: new_object_position
 					});
 				}
 			});
@@ -215,11 +260,19 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 			var new_url = [...(props.attributes.url || [])];
 			var new_title = [...(props.attributes.title || [])];
 			var new_description = [...(props.attributes.description || [])];
+			var new_object_fit = Array.isArray(props.attributes.objectFit) ? [...props.attributes.objectFit] : [];
+			var new_object_position = Array.isArray(props.attributes.objectPosition) ? [...props.attributes.objectPosition] : [];
 
 			if (new_url.length > 1) {
 				new_url.splice(position, 1);
 				new_title.splice(position, 1);
 				new_description.splice(position, 1);
+				if (new_object_fit.length > position) {
+					new_object_fit.splice(position, 1);
+				}
+				if (new_object_position.length > position) {
+					new_object_position.splice(position, 1);
+				}
 
 				if (setCurrentActiveSlide && currentActiveSlide >= new_url.length) {
 					setCurrentActiveSlide(new_url.length - 1);
@@ -228,7 +281,9 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 				props.setAttributes({
 					url: new_url,
 					title: new_title,
-					description: new_description
+					description: new_description,
+					objectFit: new_object_fit,
+					objectPosition: new_object_position
 				});
 			}
 		}
@@ -255,8 +310,28 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 		var PanelBody = (window.wp && wp.components && wp.components.PanelBody) ? wp.components.PanelBody : null;
 		var SelectControl = (window.wp && wp.components && wp.components.SelectControl) ? wp.components.SelectControl : null;
 
-		var objectFitVal = props.attributes.objectFit || 'cover';
-		var objectPositionVal = props.attributes.objectPosition || 'center center';
+		function getObjectFit(position) {
+			if (Array.isArray(props.attributes.objectFit) && props.attributes.objectFit[position] !== undefined) {
+				return props.attributes.objectFit[position] || 'cover';
+			}
+			if (typeof props.attributes.objectFit === 'string' && props.attributes.objectFit) {
+				return props.attributes.objectFit;
+			}
+			return 'cover';
+		}
+
+		function getObjectPosition(position) {
+			if (Array.isArray(props.attributes.objectPosition) && props.attributes.objectPosition[position] !== undefined) {
+				return props.attributes.objectPosition[position] || 'center center';
+			}
+			if (typeof props.attributes.objectPosition === 'string' && props.attributes.objectPosition) {
+				return props.attributes.objectPosition;
+			}
+			return 'center center';
+		}
+
+		var objectFitVal = getObjectFit(currIdx);
+		var objectPositionVal = getObjectPosition(currIdx);
 		var bgSizeMapping = {
 			'cover': 'cover',
 			'contain': 'contain',
@@ -267,7 +342,7 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 		var currentBgSize = bgSizeMapping[objectFitVal] || 'cover';
 
 		var sidebarInspector = (InspectorControls && PanelBody && SelectControl) ? el(InspectorControls, {},
-			el(PanelBody, { title: 'Configurações do Carrossel', initialOpen: true },
+			el(PanelBody, { title: 'Configurações do Slide ' + (currIdx + 1), initialOpen: true },
 				el(SelectControl, {
 					label: 'Ajuste da Imagem (object-fit)',
 					value: objectFitVal,
@@ -279,7 +354,7 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 						{ label: 'none (Tamanho original sem ajuste)', value: 'none' }
 					],
 					onChange: function(newFit) {
-						props.setAttributes({ objectFit: newFit });
+						updateObjectFit(currIdx, newFit);
 					}
 				}),
 				el(SelectControl, {
@@ -297,7 +372,7 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 						{ label: 'bottom right (Base Direita)', value: 'bottom right' }
 					],
 					onChange: function(newPos) {
-						props.setAttributes({ objectPosition: newPos });
+						updateObjectPosition(currIdx, newPos);
 					}
 				})
 			)
@@ -316,16 +391,16 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 			style: { 
 				color: "#f0f0f0", 
 				textShadow: "1px 1px 8px rgba(0, 0, 0, 0.8)", 
-				backgroundColor: "transparent",
-				border: "none",
-				outline: "none",
-				resize: "none",
-				width: "100%",
-				textAlign: "center",
-				fontFamily: "inherit",
-				fontSize: "0.95rem",
-				lineHeight: "1.4",
-				padding: "0",
+				backgroundColor: "transparent", 
+				border: "none", 
+				outline: "none", 
+				resize: "none", 
+				width: "100%", 
+				textAlign: "center", 
+				fontFamily: "inherit", 
+				fontSize: "0.95rem", 
+				lineHeight: "1.4", 
+				padding: "0", 
 				margin: "0 auto"
 			}
 		});
@@ -388,7 +463,7 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 						title: 'Ajuste da Imagem (object-fit)',
 						value: objectFitVal,
 						onChange: function(e) {
-							props.setAttributes({ objectFit: e.target.value });
+							updateObjectFit(currIdx, e.target.value);
 						}
 					},
 						el('option', { value: 'cover' }, 'Cover'),
@@ -413,7 +488,7 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 						title: 'Posição da Imagem (object-position)',
 						value: objectPositionVal,
 						onChange: function(e) {
-							props.setAttributes({ objectPosition: e.target.value });
+							updateObjectPosition(currIdx, e.target.value);
 						}
 					},
 						el('option', { value: 'top left' }, 'Top Left'),
@@ -486,12 +561,12 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 								backgroundColor: "transparent", 
 								border: "none", 
 								outline: "none", 
-								textAlign: "center",
-								fontFamily: "inherit",
-								fontSize: "inherit",
-								fontWeight: "bold",
-								textShadow: "inherit",
-								padding: "0",
+								textAlign: "center", 
+								fontFamily: "inherit", 
+								fontSize: "inherit", 
+								fontWeight: "bold", 
+								textShadow: "inherit", 
+								padding: "0", 
 								width: "100%"
 							},
 							value: titles[currIdx] || '',
@@ -618,8 +693,6 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 		var sizelines = urls.length;
 		var photos_editor = [];
 
-		var objectFitVal = props.attributes.objectFit || 'cover';
-		var objectPositionVal = props.attributes.objectPosition || 'center center';
 		var bgSizeMapping = {
 			'cover': 'cover',
 			'contain': 'contain',
@@ -627,12 +700,27 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 			'none': 'auto',
 			'scale-down': 'contain'
 		};
-		var currentBgSize = bgSizeMapping[objectFitVal] || 'cover';
 
 		for (var index = 0; index < sizelines; index++) {  
 			var active = (index === 0) ? "active" : "";
 			var _backgroundImage = "url(" + (urls[index] || "") + ")";
 			var descHtml = descriptions[index] || '';
+
+			var objectFitVal = 'cover';
+			if (Array.isArray(props.attributes.objectFit) && props.attributes.objectFit[index] !== undefined) {
+				objectFitVal = props.attributes.objectFit[index] || 'cover';
+			} else if (typeof props.attributes.objectFit === 'string' && props.attributes.objectFit) {
+				objectFitVal = props.attributes.objectFit;
+			}
+
+			var objectPositionVal = 'center center';
+			if (Array.isArray(props.attributes.objectPosition) && props.attributes.objectPosition[index] !== undefined) {
+				objectPositionVal = props.attributes.objectPosition[index] || 'center center';
+			} else if (typeof props.attributes.objectPosition === 'string' && props.attributes.objectPosition) {
+				objectPositionVal = props.attributes.objectPosition;
+			}
+
+			var currentBgSize = bgSizeMapping[objectFitVal] || 'cover';
 
 			photos_editor.push(
 				el('div',
