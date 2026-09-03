@@ -3,3 +3,113 @@ if ( ! headers_sent() ) {
 	header( "Content-Type: text/css; charset=UTF-8" );
 }
 ?>
+/* ==========================================================================
+   Slide Show Block - Carousel Fidelity Styles (Editor & Frontend Preview)
+   ========================================================================== */
+
+.slide-show-block {
+	width: 100%;
+	margin: 0 auto;
+}
+
+.slide-show-block .carousel {
+	position: relative;
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.slide-show-block .carousel-inner {
+	border-radius: 12px;
+}
+
+.slide-show-block .carousel-item {
+	background-size: cover;
+	background-position: center center;
+	border-radius: 12px;
+}
+
+.slide-show-block .carousel-caption {
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 35%, rgba(0, 0, 0, 0.88) 100%) !important;
+	bottom: 0px !important;
+	left: 0px !important;
+	right: 0px !important;
+	width: 100% !important;
+	padding: 35px 25px 40px 25px !important;
+	border-radius: 0 0 12px 12px !important;
+	margin: 0 !important;
+	z-index: 1000 !important;
+}
+
+.slide-show-block .carousel-caption h4,
+.slide-show-block .carousel-caption h4 input {
+	color: #ffffff !important;
+	font-weight: 700 !important;
+	font-size: 1.5rem !important;
+	line-height: 1.3 !important;
+	text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8) !important;
+	margin: 0 auto 6px auto !important;
+	text-align: center !important;
+}
+
+.slide-show-block .carousel-caption .carousel-desc,
+.slide-show-block .carousel-caption textarea {
+	color: #f0f0f0 !important;
+	font-size: 0.95rem !important;
+	line-height: 1.4 !important;
+	text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.8) !important;
+	background: transparent !important;
+	border: none !important;
+	outline: none !important;
+	text-align: center !important;
+	margin: 0 auto !important;
+	width: 100% !important;
+}
+
+.slide-show-block .carousel-control-prev,
+.slide-show-block .carousel-control-next {
+	width: 44px !important;
+	height: 44px !important;
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+	background-color: rgba(0, 0, 0, 0.65) !important;
+	border: 1px solid rgba(255, 255, 255, 0.3) !important;
+	border-radius: 50% !important;
+	margin: 0 15px !important;
+	opacity: 0.9 !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	cursor: pointer !important;
+	z-index: 10005 !important;
+	transition: all 0.2s ease-in-out !important;
+}
+
+.slide-show-block .carousel-control-prev:hover,
+.slide-show-block .carousel-control-next:hover {
+	background-color: rgba(0, 0, 0, 0.85) !important;
+	opacity: 1 !important;
+	transform: translateY(-50%) scale(1.08) !important;
+}
+
+.slide-show-block .carousel-indicators {
+	margin-bottom: 8px !important;
+	z-index: 10002 !important;
+}
+
+.slide-show-block .carousel-indicators button {
+	width: 10px !important;
+	height: 10px !important;
+	border-radius: 50% !important;
+	margin: 0 4px !important;
+	background-color: rgba(255, 255, 255, 0.5) !important;
+	border: none !important;
+	opacity: 0.7 !important;
+	transition: all 0.3s ease !important;
+}
+
+.slide-show-block .carousel-indicators button.active {
+	background-color: #ffffff !important;
+	opacity: 1 !important;
+	transform: scale(1.3) !important;
+}

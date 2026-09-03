@@ -51,6 +51,14 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 		description: { 
 			type: 'array',
 			default: []
+		},
+		objectFit: {
+			type: 'string',
+			default: 'cover'
+		},
+		objectPosition: {
+			type: 'string',
+			default: 'center center'
 		}
 	},
 	edit: function(props) {
@@ -241,9 +249,63 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 		var currIdx = currentActiveSlide;
 		var _backgroundImage = (urls[currIdx]) ? ("url(" + urls[currIdx] + ")") : "none";
 
+		var InspectorControls = (window.wp && wp.blockEditor && wp.blockEditor.InspectorControls) 
+			? wp.blockEditor.InspectorControls 
+			: (window.wp && wp.editor && wp.editor.InspectorControls ? wp.editor.InspectorControls : null);
+		var PanelBody = (window.wp && wp.components && wp.components.PanelBody) ? wp.components.PanelBody : null;
+		var SelectControl = (window.wp && wp.components && wp.components.SelectControl) ? wp.components.SelectControl : null;
+
+		var objectFitVal = props.attributes.objectFit || 'cover';
+		var objectPositionVal = props.attributes.objectPosition || 'center center';
+		var bgSizeMapping = {
+			'cover': 'cover',
+			'contain': 'contain',
+			'fill': '100% 100%',
+			'none': 'auto',
+			'scale-down': 'contain'
+		};
+		var currentBgSize = bgSizeMapping[objectFitVal] || 'cover';
+
+		var sidebarInspector = (InspectorControls && PanelBody && SelectControl) ? el(InspectorControls, {},
+			el(PanelBody, { title: 'Configurações do Carrossel', initialOpen: true },
+				el(SelectControl, {
+					label: 'Ajuste da Imagem (object-fit)',
+					value: objectFitVal,
+					options: [
+						{ label: 'cover (Cobrir tela - padrão)', value: 'cover' },
+						{ label: 'contain (Conter imagem inteira)', value: 'contain' },
+						{ label: 'fill (Preencher esticando)', value: 'fill' },
+						{ label: 'scale-down (Reduzir proporcional)', value: 'scale-down' },
+						{ label: 'none (Tamanho original sem ajuste)', value: 'none' }
+					],
+					onChange: function(newFit) {
+						props.setAttributes({ objectFit: newFit });
+					}
+				}),
+				el(SelectControl, {
+					label: 'Posição da Imagem (object-position)',
+					value: objectPositionVal,
+					options: [
+						{ label: 'top left (Topo Esquerda)', value: 'top left' },
+						{ label: 'top center (Topo Centro)', value: 'top center' },
+						{ label: 'top right (Topo Direita)', value: 'top right' },
+						{ label: 'center left (Centro Esquerda)', value: 'center left' },
+						{ label: 'center center (Centro - padrão)', value: 'center center' },
+						{ label: 'center right (Centro Direita)', value: 'center right' },
+						{ label: 'bottom left (Base Esquerda)', value: 'bottom left' },
+						{ label: 'bottom center (Base Centro)', value: 'bottom center' },
+						{ label: 'bottom right (Base Direita)', value: 'bottom right' }
+					],
+					onChange: function(newPos) {
+						props.setAttributes({ objectPosition: newPos });
+					}
+				})
+			)
+		) : null;
+
 		var descField = el('textarea', {
 			key: 'desc-field-' + currIdx,
-			className: 'color-1 w-100 text-center text-break',
+			className: 'color-1 w-100 text-center text-break carousel-desc',
 			rows: 2,
 			maxLength: 100,
 			value: descriptions[currIdx] || '',
@@ -252,8 +314,8 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 			},
 			placeholder: 'Coloque seu texto aqui até 100 caracteres...',
 			style: { 
-				color: "white", 
-				textShadow: "2px 2px 10px #000000", 
+				color: "#f0f0f0", 
+				textShadow: "1px 1px 8px rgba(0, 0, 0, 0.8)", 
 				backgroundColor: "transparent",
 				border: "none",
 				outline: "none",
@@ -261,7 +323,7 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 				width: "100%",
 				textAlign: "center",
 				fontFamily: "inherit",
-				fontSize: "14px",
+				fontSize: "0.95rem",
 				lineHeight: "1.4",
 				padding: "0",
 				margin: "0 auto"
@@ -277,8 +339,11 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 						width: "100%", 
 						height: "100%", 
 						"background-image": _backgroundImage, 
-						"background-size": "cover", 
-						"background-position": "center center",
+						"background-size": currentBgSize, 
+						"background-repeat": "no-repeat",
+						"background-position": objectPositionVal,
+						objectFit: objectFitVal,
+						objectPosition: objectPositionVal,
 						display: "block"
 					}
 				},
@@ -286,28 +351,80 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 					className: 'btn-group shadow-sm',
 					style: { position: 'absolute', top: '15px', left: '15px', zIndex: 10000, borderRadius: '6px', overflow: 'hidden' }
 				},
-					el('button',
-						{
-							key: 'btn-img-' + currIdx,
-							type: 'button',
-							className: 'btn btn-success btn-sm',
-							title: 'Editar Imagem do Slide',
-							style: { padding: '6px 12px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', cursor: 'pointer', gap: '5px' },
-							onClick: function() { updateURl(currIdx); }
-						},
-						el('i', { className: "fas fa-pencil-alt", 'aria-hidden': 'true' }),
-						el('span', { style: { fontWeight: '500' } }, 'Editar')
-					),
 					el('button', {
 						key: 'btn-add-' + currIdx,
 						type: 'button', 							
 						className: 'btn btn-primary btn-sm',
 						title: "Adicionar Novo Slide",
 						onClick: function() { addlinkdata(currIdx); },
-						style: { padding: '6px 12px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', cursor: 'pointer', gap: '5px' }
+						style: { width: '36px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }
 					}, 
-						el('i', { className: "fas fa-plus", 'aria-hidden': 'true' }),
-						el('span', { style: { fontWeight: '500' } }, 'Adicionar')
+						el('i', { className: "fas fa-plus", 'aria-hidden': 'true' })
+					),
+					el('button',
+						{
+							key: 'btn-img-' + currIdx,
+							type: 'button',
+							className: 'btn btn-success btn-sm',
+							title: 'Editar Imagem do Slide',
+							style: { width: '36px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' },
+							onClick: function() { updateURl(currIdx); }
+						},
+						el('i', { className: "fas fa-pencil-alt", 'aria-hidden': 'true' })
+					),
+					el('select', {
+						key: 'select-fit-' + currIdx,
+						className: 'form-select form-select-sm bg-dark text-white border-0',
+						style: {
+							height: '32px',
+							fontSize: '12px',
+							cursor: 'pointer',
+							padding: '2px 24px 2px 8px',
+							borderRadius: '0',
+							outline: 'none',
+							boxShadow: 'none',
+							width: 'auto'
+						},
+						title: 'Ajuste da Imagem (object-fit)',
+						value: objectFitVal,
+						onChange: function(e) {
+							props.setAttributes({ objectFit: e.target.value });
+						}
+					},
+						el('option', { value: 'cover' }, 'Cover'),
+						el('option', { value: 'contain' }, 'Contain'),
+						el('option', { value: 'fill' }, 'Fill'),
+						el('option', { value: 'scale-down' }, 'Scale-down'),
+						el('option', { value: 'none' }, 'None')
+					),
+					el('select', {
+						key: 'select-pos-' + currIdx,
+						className: 'form-select form-select-sm bg-dark text-white border-0',
+						style: {
+							height: '32px',
+							fontSize: '12px',
+							cursor: 'pointer',
+							padding: '2px 24px 2px 8px',
+							borderRadius: '0',
+							outline: 'none',
+							boxShadow: 'none',
+							width: 'auto'
+						},
+						title: 'Posição da Imagem (object-position)',
+						value: objectPositionVal,
+						onChange: function(e) {
+							props.setAttributes({ objectPosition: e.target.value });
+						}
+					},
+						el('option', { value: 'top left' }, 'Top Left'),
+						el('option', { value: 'top center' }, 'Top Center'),
+						el('option', { value: 'top right' }, 'Top Right'),
+						el('option', { value: 'center left' }, 'Center Left'),
+						el('option', { value: 'center center' }, 'Center Center'),
+						el('option', { value: 'center right' }, 'Center Right'),
+						el('option', { value: 'bottom left' }, 'Bottom Left'),
+						el('option', { value: 'bottom center' }, 'Bottom Center'),
+						el('option', { value: 'bottom right' }, 'Bottom Right')
 					),
 					el('button', {
 						key: 'btn-remove-' + currIdx,
@@ -315,10 +432,9 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 						className: 'btn btn-danger btn-sm',
 						title: "Excluir Slide Atual",
 						onClick: function() { removelinkdata(currIdx); },
-						style: { padding: '6px 12px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', cursor: 'pointer', gap: '5px' }
+						style: { width: '36px', height: '32px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }
 					}, 
-						el('i', { className: "fas fa-times", 'aria-hidden': 'true' }),
-						el('span', { style: { fontWeight: '500' } }, 'Excluir')
+						el('i', { className: "fas fa-times", 'aria-hidden': 'true' })
 					)
 				),
 				el('div', {
@@ -337,7 +453,7 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 					}
 				}, 
 					el('i', { className: 'fas fa-images', 'aria-hidden': 'true' }),
-					el('span', {}, 'Slide ' + (currIdx + 1) + ' de ' + (sizelines || 1))
+					el('span', {}, 'Slide ' + (currIdx + 1) + ' - ' + (sizelines || 1))
 				),
 				el('div', 
 					{ 
@@ -349,7 +465,7 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 							right: "0px", 
 							width: "100%", 
 							background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 35%, rgba(0,0,0,0.88) 100%)", 
-							padding: "30px 25px 12px 25px", 
+							padding: "30px 25px 40px 25px", 
 							borderRadius: "0 0 8px 8px",
 							zIndex: 1000
 						}
@@ -408,7 +524,7 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 			})(b);
 		}
 		
-		return el('div', { className: "w-100 slide-show-block" },
+		var mainCarousel = el('div', { className: "w-100 slide-show-block" },
 			el('div', { className: "rounded", style: { width: "80%", overflowX: "hidden", marginLeft: "auto", marginRight: "auto" } },
 				el('div', 
 					{ 
@@ -489,6 +605,10 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 				)
 			)
 		); 
+
+		return sidebarInspector 
+			? el(wp.element.Fragment, {}, sidebarInspector, mainCarousel)
+			: mainCarousel;
 	},	
 	
 	save: function(props) {
@@ -497,6 +617,17 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 		var descriptions = props.attributes.description || [];
 		var sizelines = urls.length;
 		var photos_editor = [];
+
+		var objectFitVal = props.attributes.objectFit || 'cover';
+		var objectPositionVal = props.attributes.objectPosition || 'center center';
+		var bgSizeMapping = {
+			'cover': 'cover',
+			'contain': 'contain',
+			'fill': '100% 100%',
+			'none': 'auto',
+			'scale-down': 'contain'
+		};
+		var currentBgSize = bgSizeMapping[objectFitVal] || 'cover';
 
 		for (var index = 0; index < sizelines; index++) {  
 			var active = (index === 0) ? "active" : "";
@@ -507,7 +638,16 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 				el('div',
 					{ 
 						className: 'carousel-item rounded ' + active,
-						style: { width: "100%", height: "100%", "background-image": _backgroundImage, "background-size": "cover", "background-position": "center center" }
+						style: { 
+							width: "100%", 
+							height: "100%", 
+							"background-image": _backgroundImage, 
+							"background-size": currentBgSize, 
+							"background-repeat": "no-repeat",
+							"background-position": objectPositionVal,
+							objectFit: objectFitVal,
+							objectPosition: objectPositionVal
+						}
 					},
 					el('div', 
 						{ 
@@ -518,7 +658,7 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 								right: "0px", 
 								width: "100%", 
 								background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 35%, rgba(0,0,0,0.88) 100%)", 
-								padding: "30px 25px 12px 25px", 
+								padding: "30px 25px 40px 25px", 
 								borderRadius: "0 0 8px 8px"
 							}
 						},
@@ -531,8 +671,8 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 						),
 						el('div',
 							{
-								className: 'color-1 w-100 text-center text-break',
-								style: { color: "white", textShadow: "2px 2px 10px #000000", backgroundColor: "transparent", fontSize: "14px", lineHeight: "1.4", textAlign: "center" }
+								className: 'color-1 w-100 text-center text-break carousel-desc',
+								style: { color: "#f0f0f0", textShadow: "1px 1px 8px rgba(0, 0, 0, 0.8)", backgroundColor: "transparent", fontSize: "0.95rem", lineHeight: "1.4", textAlign: "center" }
 							},
 							(typeof window.HTMLReactParser === 'function') 
 								? window.HTMLReactParser(descHtml) 
