@@ -1,4 +1,4 @@
-=== Carousel Block  ===
+=== Carousel Block ===
 Contributors: luiz0067yahoo
 Tags: carousel, bootstrap, block, gutenberg, slider
 Requires at least: 6.0

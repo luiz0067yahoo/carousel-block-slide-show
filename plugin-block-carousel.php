@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:       Carousel Block for Bootstrap
- * Plugin URI:        https://github.com/luiz0067yahoo/wordpress-plugin-gutenberg-block-bootstrap-carousel-
+ * Plugin Name:       Carousel Block Slide Show
+ * Plugin URI:        https://github.com/luiz0067yahoo/wordpress-plugin-gutenberg-block-bootstrap-carousel-slide-show
  * Description:       WordPress Gutenberg Block for responsive Bootstrap 5 Carousels, compatible with any theme.
  * Version:           1.0.0
  * Requires at least: 6.0
