@@ -1,4 +1,4 @@
-=== Carousel Block ===
+=== Carousel Block Slide Show ===
 Contributors: luiz0067yahoo
 Tags: carousel, bootstrap, block, gutenberg, slider
 Requires at least: 6.0
@@ -20,7 +20,7 @@ A modern and intuitive WordPress plugin that adds a native Gutenberg block for c
 
 1. Download the plugin and upload the files to your WordPress plugins directory (`/wp-content/plugins/`).
 2. In the WordPress administration panel, go to Plugins > Installed Plugins.
-3. Locate Carousel Block for Bootstrap and click Activate.
+3. Locate Carousel Block Slide Show and click Activate.
 
 == Changelog ==
 

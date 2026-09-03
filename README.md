@@ -38,16 +38,17 @@ Plugin WordPress moderno e intuitivo que adiciona um bloco nativo do **Gutenberg
 ## 📂 Estrutura do Projeto
 
 ```text
-wordpress-plugin-gutenberg-block-bootstrap-carousel/
-├── css/                                              # Folhas de estilo locais (fallback)
+carousel-block-slide-show/
+├── assets/                                           # Bibliotecas locais (Bootstrap 5 e Font Awesome 6)
 ├── js/
 │   └── blocks/
 │       └── slide-show.js                             # Registro do bloco Gutenberg, edição e renderização
+├── languages/                                        # Arquivos de tradução i18n
 ├── plugin/
 │   └── blocks.php                                    # Registro nativo no PHP via register_block_type
-├── fonts/                                            # Fontes locais do tema/plugin
 ├── style.css.php                                     # Estilos customizados e regras de fidelidade visual
-├── wordpress-plugin-gutenberg-block-bootstrap-carousel.php  # Arquivo principal do plugin
+├── carousel-block-slide-show.php                     # Arquivo principal do plugin
+├── readme.txt                                        # Metadados e documentação para o repositório WordPress
 └── README.md                                         # Documentação do projeto
 ```
 
@@ -58,10 +59,10 @@ wordpress-plugin-gutenberg-block-bootstrap-carousel/
 1. Baixe ou clone este repositório para o diretório de plugins do seu WordPress:
    ```bash
    cd wp-content/plugins/
-   git clone https://github.com/luiz0067yahoo/wordpress-plugin-gutenberg-block-bootstrap-carousel-.git wordpress-plugin-gutenberg-block-bootstrap-carousel
+   git clone https://github.com/luiz0067yahoo/plugin-block-carousel-slide-show.git carousel-block-slide-show
    ```
 2. No painel de administração do WordPress, vá em **Plugins > Plugins Instalados**.
-3. Localize **Carousel Block for Bootstrap** e clique em **Ativar**.
+3. Localize **Carousel Block Slide Show** e clique em **Ativar**.
 
 ---
 
