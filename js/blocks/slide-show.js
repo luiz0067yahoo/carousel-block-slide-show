@@ -77,7 +77,9 @@ wp.blocks.registerBlockType('cms-adm/slide-show', {
 
 		var acc_url = props.attributes.url || [];
 		var acc_title = props.attributes.title || [];
-		var acc_description = props.attributes.description || [		if (!props.attributes.id || acc_url.length === 0 || acc_title.length === 0) {	
+		var acc_description = props.attributes.description || [];
+
+		if (!props.attributes.id || acc_url.length === 0 || acc_title.length === 0) {	
 			var initial_title = [];
 			var initial_url = [];
 			var initial_description = [];
