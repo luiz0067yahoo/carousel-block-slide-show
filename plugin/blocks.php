@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function adm__register_slide_show_block() {
 	// Register Bootstrap and FontAwesome styles
-	wp_register_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css', array(), '5.3.3' );
-	wp_register_style( 'bootstrapAll', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css', array(), '6.5.2' );
+	wp_register_style( 'bootstrap', plugins_url( '/../assets/bootstrap/css/bootstrap.min.css', __FILE__ ), array(), '5.3.3' );
+	wp_register_style( 'bootstrapAll', plugins_url( '/../assets/fontawesome/css/all.min.css', __FILE__ ), array(), '6.5.2' );
 	wp_register_style( 'style', plugins_url( '/../style.css.php', __FILE__ ), array(), '1.0.0' );
 
 	$slide_show_js = dirname( __FILE__ ) . '/../js/blocks/slide-show.js';
@@ -41,4 +41,4 @@ function adm__block_admin() {
 	wp_enqueue_style( 'bootstrap' );
 	wp_enqueue_style( 'bootstrapAll' );
 }
-add_action( 'enqueue_block_editor_assets', 'adm__block_admin' );
+add_action( 'enqueue_block_editor_assets', 'adm__block_admin' );
