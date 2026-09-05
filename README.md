@@ -1,4 +1,4 @@
-#Carousel Block Slide Show 🎠
+# Carousel Block Slide Show 🎠
 
 [![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg?logo=wordpress)](https://wordpress.org)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.3-7952b3.svg?logo=bootstrap)](https://getbootstrap.com)
@@ -6,6 +6,10 @@
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
 Plugin WordPress moderno e intuitivo que adiciona um bloco nativo do **Gutenberg** para criação e gerenciamento de carrosséis de imagens responsivos com **Bootstrap 5** e ícones **Font Awesome 6**.
+
+---
+
+![Screenshot do Carousel Block Slide Show](screenshot.png)
 
 ---
 
@@ -49,7 +53,8 @@ carousel-block-slide-show/
 ├── style.css.php                                     # Estilos customizados e regras de fidelidade visual
 ├── carousel-block-slide-show.php                     # Arquivo principal do plugin
 ├── readme.txt                                        # Metadados e documentação para o repositório WordPress
-└── README.md                                         # Documentação do projeto
+├── README.md                                         # Documentação do projeto
+└── screenshot.png                                    # Captura de tela do bloco
 ```
 
 ---

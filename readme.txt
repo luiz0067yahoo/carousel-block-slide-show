@@ -22,6 +22,10 @@ A modern and intuitive WordPress plugin that adds a native Gutenberg block for c
 2. In the WordPress administration panel, go to Plugins > Installed Plugins.
 3. Locate Carousel Block Slide Show and click Activate.
 
+== Screenshots ==
+
+1. Visualização do bloco Carousel Block Slide Show no editor Gutenberg e no frontend.
+
 == Changelog ==
 
 = 1.0.0 =
